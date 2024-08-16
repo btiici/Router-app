@@ -6,7 +6,7 @@ import About from "./src/components/About"
 import Newpost from "./src/components/Newpost"
 import Postpage from "./src/components/Postpage"
 import Missing from "./src/components/Missing"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useNavigate} from "react-router-dom"
 import React from "react"
 
 
@@ -41,6 +41,13 @@ export default function App () {
 ])
 
     const [search, setSearch] = React.useState('')
+    const navigate = useNavigate()
+
+    function handleDelete(id){
+        const postListing = posts.filter(post => post.id !== id)
+        setPosts(postListing)
+        navigate('/')
+    }
 
     return(
         <div className="app">
@@ -49,7 +56,7 @@ export default function App () {
             <Routes>  
                 <Route path="/" element={<Home posts={posts}/>} />
                 <Route path="/post" element={<Newpost />} />
-                <Route path="/post/:id" element={<Postpage />} />
+                <Route path="/post/:id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
                 <Route path="/about" element={<About />} />
                 <Route path="*" element={<Missing />} />
             </Routes> 
