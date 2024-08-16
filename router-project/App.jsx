@@ -8,6 +8,11 @@ import Postpage from "./src/components/Postpage"
 import Missing from "./src/components/Missing"
 import { Route, Routes, useNavigate} from "react-router-dom"
 import React from "react"
+import { format } from 'date-fns';
+
+const formattedDate = format(new Date(), 'yyyy-MM-dd');
+console.log(formattedDate); // Outputs the current date in 'yyyy-MM-dd' format
+
 
 
 
@@ -41,6 +46,9 @@ export default function App () {
 ])
 
     const [search, setSearch] = React.useState('')
+    const [postTitle, setPostTitle] =React.useState('')
+    const [postBody, setPostBody] =React.useState('')
+
     const navigate = useNavigate()
 
     function handleDelete(id){
@@ -49,13 +57,25 @@ export default function App () {
         navigate('/')
     }
 
+    function handleSubmit(e){
+        e.preventDefault()
+        const id = posts.length ? posts[posts.length - 1].id + 1 : 1
+        const date = format(new Date(), 'MMMM dd, yyyy pp')
+        const myNewPost = {id, Title: postTitle, date, body:postBody}
+        const allPosts = [...posts, myNewPost]
+        setPosts(allPosts)
+        navigate('/')
+        setPostTitle('')
+        setPostBody('')
+    }
+
     return(
         <div className="app">
             <Header title="React JS-blog" />
             <Nav search={search} setSearch={setSearch}/> 
             <Routes>  
                 <Route path="/" element={<Home posts={posts}/>} />
-                <Route path="/post" element={<Newpost />} />
+            <Route path="/post" element={<Newpost postTitle={postTitle} setPostTitle={setPostTitle} postBody={postBody} setPostBody={setPostBody} handleSubmit={handleSubmit}/>} />
                 <Route path="/post/:id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
                 <Route path="/about" element={<About />} />
                 <Route path="*" element={<Missing />} />
