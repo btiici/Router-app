@@ -18,7 +18,7 @@ export default function Newpost ({postTitle, setPostTitle, postBody, setPostBody
                     required
                     id="postBody"
                     value={postBody}
-                    onChange={setPostBody}
+                    onChange={(e) => setPostBody(e.target.value)}
                 />
                 <button type="submit">
                     Post

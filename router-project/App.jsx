@@ -9,41 +9,12 @@ import Missing from "./src/components/Missing"
 import { Route, Routes, useNavigate} from "react-router-dom"
 import React from "react"
 import { format } from 'date-fns';
-
-const formattedDate = format(new Date(), 'yyyy-MM-dd');
-console.log(formattedDate); // Outputs the current date in 'yyyy-MM-dd' format
-
-
+import api from "./src/components/api/posts"
 
 
 export default function App () {
 
-        const [posts, setPosts] = React.useState([
-            {
-              id: 1,
-              title: "My First Post",
-              datetime: "July 01, 2021 11:17:36 AM",
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!"
-            },
-            {
-              id: 2,
-              title: "My 2nd Post",
-              datetime: "July 01, 2021 11:17:36 AM",
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!"
-            },
-            {
-              id: 3,
-              title: "My 3rd Post",
-              datetime: "July 01, 2021 11:17:36 AM",
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!"
-            },
-            {
-              id: 4,
-              title: "My Fourth Post",
-              datetime: "July 01, 2021 11:17:36 AM",
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!"
-}
-])
+        const [posts, setPosts] = React.useState([])
 
     const [search, setSearch] = React.useState('')
     const [searchResult, setSearchResult] = React.useState('')
@@ -51,6 +22,12 @@ export default function App () {
     const [postBody, setPostBody] =React.useState('')
 
     const navigate = useNavigate()
+
+    React.useEffect(() => {
+            api.get('/posts')
+            .then(response => setPosts(response.data))
+            .catch(error => console.error('Error fetching posts:', error));
+    }, []);
 
     React.useEffect(() => {
         const filteredResult = posts.filter(post => ((post.body).toLowerCase()).includes((search).toLowerCase())
@@ -68,8 +45,8 @@ export default function App () {
     function handleSubmit(e){
         e.preventDefault()
         const id = posts.length ? posts[posts.length - 1].id + 1 : 1
-        const date = format(new Date(), 'MMMM dd, yyyy pp')
-        const myNewPost = {id, Title: postTitle, date, body:postBody}
+        const datetime = format(new Date(), 'MMMM dd, yyyy pp')
+        const myNewPost = {id, title: postTitle, datetime, body:postBody}
         const allPosts = [...posts, myNewPost]
         setPosts(allPosts)
         navigate('/')
