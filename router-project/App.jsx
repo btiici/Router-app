@@ -46,10 +46,18 @@ export default function App () {
 ])
 
     const [search, setSearch] = React.useState('')
+    const [searchResult, setSearchResult] = React.useState('')
     const [postTitle, setPostTitle] =React.useState('')
     const [postBody, setPostBody] =React.useState('')
 
     const navigate = useNavigate()
+
+    React.useEffect(() => {
+        const filteredResult = posts.filter(post => ((post.body).toLowerCase()).includes((search).toLowerCase())
+        || ((post.title).toLowerCase()).includes((search).toLowerCase())
+        )
+        setSearchResult(filteredResult.reverse())
+    }, [posts, search])
 
     function handleDelete(id){
         const postListing = posts.filter(post => post.id !== id)
@@ -74,8 +82,8 @@ export default function App () {
             <Header title="React JS-blog" />
             <Nav search={search} setSearch={setSearch}/> 
             <Routes>  
-                <Route path="/" element={<Home posts={posts}/>} />
-            <Route path="/post" element={<Newpost postTitle={postTitle} setPostTitle={setPostTitle} postBody={postBody} setPostBody={setPostBody} handleSubmit={handleSubmit}/>} />
+                <Route path="/" element={<Home posts={searchResult}/>} />
+                <Route path="/post" element={<Newpost postTitle={postTitle} setPostTitle={setPostTitle} postBody={postBody} setPostBody={setPostBody} handleSubmit={handleSubmit}/>} />
                 <Route path="/post/:id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
                 <Route path="/about" element={<About />} />
                 <Route path="*" element={<Missing />} />
