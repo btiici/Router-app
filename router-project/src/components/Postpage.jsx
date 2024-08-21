@@ -12,7 +12,8 @@ export default function Postpage ({ posts, handleDelete }){
                         <h2>{post.title}</h2>
                         <p className="postDate">{post.datetime}</p>
                         <p className="postBody">{post.body}</p>
-                        <button onClick={() => handleDelete(post.id)}>
+                        <Link to={`/edit/${post.id}`}><button className="editButton">Edit Post</button></Link>
+                        <button onClick={() => handleDelete(post.id)} className="deleteButton">
                             Delete Post
                         </button>
                     </>
