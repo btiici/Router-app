@@ -11,6 +11,8 @@ import React from "react"
 import { format } from 'date-fns';
 import api from "./src/components/api/posts"
 import Editpost from "./src/components/Editpost"
+import UseWindowSize from "./src/components/hooks/useWindowSize"
+import UseAxiosFetch from "./src/components/hooks/UseAxiosFetch"
 
 
 export default function App () {
@@ -22,14 +24,14 @@ export default function App () {
     const [postBody, setPostBody] =React.useState('')
     const [editTitle, setEditTitle] =React.useState('')
     const [editBody, setEditBody] =React.useState('')
-
+    const { width } = UseWindowSize();
+    const { data, fetchError, isLoading } = UseAxiosFetch('https://jsonplaceholder.typicode.com/posts');
     const navigate = useNavigate()
 
+
     React.useEffect(() => {
-            api.get('/posts')
-            .then(response => setPosts(response.data))
-            .catch(error => console.error('Error fetching posts:', error));
-    }, []);
+        setPosts(data)
+    }, [data]) 
 
     React.useEffect(() => {
         const filteredResult = posts.filter(post => ((post.body).toLowerCase()).includes((search).toLowerCase())
@@ -70,10 +72,10 @@ export default function App () {
 
     return(
         <div className="app">
-            <Header title="React JS-blog" />
+            <Header title="React JS-blog" width={width}/>
             <Nav search={search} setSearch={setSearch}/> 
             <Routes>  
-                <Route path="/" element={<Home posts={searchResult}/>} />
+                <Route path="/" element={<Home posts={searchResult} fetchError={fetchError} isLoading={isLoading}/>} />
                 <Route path="/post" element={<Newpost postTitle={postTitle} setPostTitle={setPostTitle} postBody={postBody} setPostBody={setPostBody} handleSubmit={handleSubmit}/>} />
                 <Route path="/edit/:id" element={<Editpost posts={posts} editTitle={editTitle} setEditTitle={setEditTitle} editBody={editBody} setEditBody={setEditBody} handleEdit={handleEdit}/>} />
                 <Route path="/post/:id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
