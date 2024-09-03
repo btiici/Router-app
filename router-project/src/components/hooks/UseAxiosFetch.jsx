@@ -4,7 +4,7 @@ import React from "react";
 export default function UseAxiosFetch (dataUrl){
     const [data, setData] = React.useState([])
     const [fetchError, setFetchError] = React.useState(null)
-    const [isLoading, setIsLoading] = React.useState(null)
+    const [isLoading, setIsLoading] = React.useState(false)
 
     React.useEffect(() => {
         let isMounted = true

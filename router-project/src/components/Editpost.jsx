@@ -1,8 +1,12 @@
 import React from "react"
 import { useParams, Link } from "react-router-dom"
+import { useContext } from "react";
+import DataContext from "./context/DataContext";
 
-export default function Editpost ({posts, handleEdit, editTitle, setEditTitle, editBody, setEditBody}){
 
+export default function Editpost (){
+
+    const { posts, handleEdit, editTitle, setEditTitle, editBody, setEditBody } = useContext(DataContext);
     const { id } = useParams()
     const post = posts.find(post => post.id.toString() === id);
 
